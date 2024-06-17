@@ -9,7 +9,7 @@ export default function CardSty() {
     const [movieList, setMovieList] = React.useState([]);
 
     const getMovie = () => {
-        fetch("https://api.themoviedb.org/3/discover/movie?api_key=ee59a3cc74ed38cd064dfe46d98a8f83")
+        fetch("https://api.themoviedb.org/3/discover/movie?")
             .then(res => res.json())
             .then(json => setMovieList(json.results));
     };
