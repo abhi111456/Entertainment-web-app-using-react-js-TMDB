@@ -24,7 +24,7 @@ export default function Cardd() {
                Recommended for you
             </Typography>
           
-            <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '30px' }}>
                 {movieList.length > 0 ? movieList.map((movie) => (
                     <Card key={movie.id} sx={{ minHeight: '200px', width: 320 }}>
                     
