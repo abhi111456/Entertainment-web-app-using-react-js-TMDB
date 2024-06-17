@@ -3,8 +3,8 @@ import Card from '@mui/joy/Card';
 import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
-import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
-
+import BookmarkAdd from '@mui/icons-material/BookmarkAddOutlined';
+import IconButton from '@mui/joy/IconButton';
 export default function Cardd() {
     const [movieList, setMovieList] = React.useState([]);
 
@@ -23,9 +23,11 @@ export default function Cardd() {
             <Typography level="h2" fontSize="xl" sx={{ mb: 2, color: 'white', marginLeft: '25px', fontSize: '18px' }}>
                Recommended for you
             </Typography>
-            <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '40px' }}>
+          
+            <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '10px' }}>
                 {movieList.length > 0 ? movieList.map((movie) => (
                     <Card key={movie.id} sx={{ minHeight: '200px', width: 320 }}>
+                    
                         <CardCover>
                             <img
                                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -44,7 +46,6 @@ export default function Cardd() {
                                 {movie.title}
                             </Typography>
                             <Typography
-                                startDecorator={<LocationOnRoundedIcon />}
                                 textColor="neutral.300"
                             >
                                 {movie.release_date}
