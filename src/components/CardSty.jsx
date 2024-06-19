@@ -9,7 +9,7 @@ export default function CardSty() {
     const [movieList, setMovieList] = React.useState([]);
 
     const getMovie = () => {
-        fetch("https://api.themoviedb.org/3/discover/movie?")
+        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`)
             .then(res => res.json())
             .then(json => setMovieList(json.results));
     };
@@ -22,7 +22,11 @@ export default function CardSty() {
 
     return (
         <>
-            <Typography level="h2" fontSize="xl" sx={{ mb: 0.5, color: 'white', marginLeft: '5px' }}>
+            <Typography 
+                level="h2" 
+                fontSize="xl" 
+                sx={{  color: 'white', ml: '25px', fontSize: '24px', fontWeight: 'bold' }}
+            >
                 Trending
             </Typography>
             <div style={{ display: 'flex', overflowX: 'auto', padding: '10px', gap: '10px' }}>

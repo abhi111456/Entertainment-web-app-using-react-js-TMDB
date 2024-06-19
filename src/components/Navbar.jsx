@@ -11,10 +11,10 @@ import { Avatar } from "@mui/material";
 
 export default function Navbar() {
   return (
-    <Box sx={{ display: 'flex', border: 1, width: '100%', alignItems: 'center', justifyContent: 'space-between' ,height:'70px',marginBottom:'10px',
-    backgroundColor:'#171D2F',borderRadius:'20px',color:'skyblue'
+    <Box sx={{ display: 'flex',  width: '100%', alignItems: 'center', justifyContent: 'space-between' ,height:'60px',marginBottom:'10px',
+    backgroundColor:'#171D2F',borderRadius:'20px',color:'skyblue',marginTop:'0px'
     }}>
-      <MovieCreationIcon sx={{ fontSize: '30px' }} />
+      <MovieCreationIcon sx={{ fontSize: '30px',color:'red',marginLeft:'10px' }} />
       <List
         role="menubar"
         orientation="horizontal"
@@ -50,7 +50,7 @@ export default function Navbar() {
           </ListItemButton>
         </ListItem>
       </List>
-      <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/1.jpg" />
+      <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/1.jpg" sx={{marginRight:'10px'}} />
     </Box>
   );
 }
