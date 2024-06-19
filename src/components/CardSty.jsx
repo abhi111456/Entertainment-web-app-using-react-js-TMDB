@@ -1,35 +1,75 @@
 import * as React from 'react';
+import axios from 'axios';
 import Card from '@mui/joy/Card';
 import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 
-export default function CardSty() {
+export default function CardSty(props) {
     const [movieList, setMovieList] = React.useState([]);
 
     const getMovie = () => {
-        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`)
-            .then(res => res.json())
-            .then(json => setMovieList(json.results));
+        axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`)
+            .then(res => setMovieList(res.data.results))
+            .catch(err => console.error('Error fetching movies:', err));
     };
 
     React.useEffect(() => {
         getMovie();
     }, []);
 
-    console.log(movieList);
+    const handleScroll = (event) => {
+        const container = document.getElementById('cardContainer');
+        if (event.deltaY > 0) {
+            container.scrollLeft += 100;
+        } else {
+            container.scrollLeft -= 100;
+        }
+    };
+
+    const handleKeyDown = (event) => {
+        const container = document.getElementById('cardContainer');
+        if (event.key === 'ArrowRight') {
+            container.scrollLeft += 100;
+        } else if (event.key === 'ArrowLeft') {
+            container.scrollLeft -= 100;
+        }
+    };
+
+    React.useEffect(() => {
+        const container = document.getElementById('cardContainer');
+        container.addEventListener('wheel', handleScroll);
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            container.removeEventListener('wheel', handleScroll);
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     return (
         <>
             <Typography 
                 level="h2" 
                 fontSize="xl" 
-                sx={{  color: 'white', ml: '25px', fontSize: '24px', fontWeight: 'bold' }}
+                sx={{ color: 'white', ml: '25px', fontSize: '24px', fontWeight: 'bold' }}
             >
                 Trending
             </Typography>
-            <div style={{ display: 'flex', overflowX: 'auto', padding: '10px', gap: '10px' }}>
+            <div 
+                id="cardContainer"
+                style={{ 
+                    display: 'flex', 
+                    overflowX: 'auto', 
+                    padding: '10px', 
+                    gap: '10px', 
+                    cursor: 'grab', 
+                    scrollBehavior: 'smooth', 
+                    msOverflowStyle: 'none', 
+                    scrollbarWidth: 'none' 
+                }}
+                className="hide-scrollbar"
+            >
                 {movieList.length > 0 ? movieList.map((movie) => (
                     <Card key={movie.id} sx={{ minHeight: '180px', width: 360, flex: '0 0 auto' }}>
                         <CardCover>
@@ -59,6 +99,16 @@ export default function CardSty() {
                     </Card>
                 )) : <Typography level="h4" fontSize="lg" sx={{ color: 'white', marginLeft: '5px' }}>Loading...</Typography>}
             </div>
+            <style jsx>{`
+                .hide-scrollbar {
+                    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+                    scrollbar-width: none;  /* Firefox */
+                }
+
+                .hide-scrollbar::-webkit-scrollbar { 
+                    display: none;  /* Safari and Chrome */
+                }
+            `}</style>
         </>
     );
 }

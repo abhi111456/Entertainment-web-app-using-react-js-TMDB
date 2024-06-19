@@ -23,24 +23,24 @@ export default function Footer() {
       <Grid container spacing={4} justifyContent="center">
         <Grid item xs={12} md={4}>
           <Typography variant="h6" sx={{ marginBottom: '10px',fontSize:'22px' }}>Product</Typography>
-          <Link href="#" color="inherit" sx={{ display: 'block',fontSize:'20px', marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Features</Link>
-          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Integrations</Link>
-          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Pricing</Link>
-          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>FAQ</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block',fontSize:'20px', marginBottom: '5px', textDecoration: 'none', }}>Features</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', }}>Integrations</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', }}>Pricing</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', }}>FAQ</Link>
         </Grid>
         <Grid item xs={12} md={4}>
           <Typography variant="h6" sx={{ marginBottom: '10px',fontSize:'22px'  }}>Company</Typography>
-          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Privacy</Link>
-          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Pricing</Link>
-          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Pricing</Link>
-          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Terms of Service</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', }}>Privacy</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', }}>Pricing</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', }}>Pricing</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', }}>Terms of Service</Link>
         </Grid>
         <Grid item xs={12} md={4}>
           <Typography variant="h6" sx={{ marginBottom: '10px' ,fontSize:'22px' }}>Developers</Typography>
-          <Link href="#" color="inherit" sx={{ display: 'block',fontSize:'20px', marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Pricing</Link>
-          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Developer API</Link>
-          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Documentation</Link>
-          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Guides</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block',fontSize:'20px', marginBottom: '5px', textDecoration: 'none', }}>Pricing</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', }}>Developer API</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', }}>Documentation</Link>
+          <Link href="#" color="inherit" sx={{ display: 'block', fontSize:'20px',marginBottom: '5px', textDecoration: 'none', }}>Guides</Link>
         </Grid>
       </Grid>
       <Box sx={{ marginTop: '20px' }}>

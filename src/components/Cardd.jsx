@@ -1,17 +1,18 @@
 import * as React from 'react';
+import axios from 'axios';
 import Card from '@mui/joy/Card';
 import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import { Box } from '@mui/joy';
 
-export default function Cardd() {
+export default function Cardd(props) {
     const [movieList, setMovieList] = React.useState([]);
 
     const getMovie = () => {
-        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`)
-            .then(res => res.json())
-            .then(json => setMovieList(json.results));
+        axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`)
+            .then(res => setMovieList(res.data.results))
+            .catch(err => console.error('Error fetching movies:', err));
     };
 
     React.useEffect(() => {
@@ -51,7 +52,7 @@ export default function Cardd() {
                     >
                         <CardCover>
                             <img
-                                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                                src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
                                 loading="lazy"
                                 alt={movie.title}
                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -79,15 +80,15 @@ export default function Cardd() {
                                     fontWeight: 'bold' 
                                 }}
                             >
-                                {movie.title}
+                                {movie.original_name}
                             </Typography>
                             <Typography 
                                 sx={{ 
-                                    fontSize: '12px', 
+                                    fontSize: '14px', 
                                     color: 'gray.300' 
                                 }}
                             >
-                                {movie.release_date}
+                                {movie.vote_average}
                             </Typography>
                         </CardContent>
                     </Card>
