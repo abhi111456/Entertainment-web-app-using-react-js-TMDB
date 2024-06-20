@@ -66,6 +66,7 @@ export default function Cardd(props) {
                         <CardContent sx={{ 
                             position: 'absolute', 
                             bottom: '0', 
+                            left:'0',
                             width: '100%', 
                             color: 'white', 
                             padding: '8px', 
@@ -76,6 +77,7 @@ export default function Cardd(props) {
                                 level="h5" 
                                 sx={{ 
                                     mb: 0.5, 
+                                    textAlign:'center' ,
                                     fontSize: '16px', 
                                     fontWeight: 'bold' 
                                 }}
@@ -84,6 +86,7 @@ export default function Cardd(props) {
                             </Typography>
                             <Typography 
                                 sx={{ 
+                                    textAlign:'center' ,
                                     fontSize: '14px', 
                                     color: 'gray.300' 
                                 }}

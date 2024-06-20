@@ -5,9 +5,11 @@ import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
+import debounce from 'lodash/debounce';
 
 export default function CardSty(props) {
     const [movieList, setMovieList] = React.useState([]);
+    const containerRef = React.useRef(null);
 
     const getMovie = () => {
         axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`)
@@ -19,30 +21,41 @@ export default function CardSty(props) {
         getMovie();
     }, []);
 
-    const handleScroll = (event) => {
-        const container = document.getElementById('cardContainer');
-        if (event.deltaY > 0) {
-            container.scrollLeft += 100;
-        } else {
-            container.scrollLeft -= 100;
+    const handleScroll = debounce((event) => {
+        if (containerRef.current) {
+            containerRef.current.scrollBy({
+                left: event.deltaY > 0 ? 100 : -100,
+                behavior: 'smooth'
+            });
         }
-    };
+    }, 50);
 
     const handleKeyDown = (event) => {
-        const container = document.getElementById('cardContainer');
-        if (event.key === 'ArrowRight') {
-            container.scrollLeft += 100;
-        } else if (event.key === 'ArrowLeft') {
-            container.scrollLeft -= 100;
+        if (containerRef.current) {
+            if (event.key === 'ArrowRight') {
+                containerRef.current.scrollBy({
+                    left: 100,
+                    behavior: 'smooth'
+                });
+            } else if (event.key === 'ArrowLeft') {
+                containerRef.current.scrollBy({
+                    left: -100,
+                    behavior: 'smooth'
+                });
+            }
         }
     };
 
     React.useEffect(() => {
-        const container = document.getElementById('cardContainer');
-        container.addEventListener('wheel', handleScroll);
-        window.addEventListener('keydown', handleKeyDown);
+        const container = containerRef.current;
+        if (container) {
+            container.addEventListener('wheel', handleScroll);
+            window.addEventListener('keydown', handleKeyDown);
+        }
         return () => {
-            container.removeEventListener('wheel', handleScroll);
+            if (container) {
+                container.removeEventListener('wheel', handleScroll);
+            }
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
@@ -57,7 +70,7 @@ export default function CardSty(props) {
                 Trending
             </Typography>
             <div 
-                id="cardContainer"
+                ref={containerRef}
                 style={{ 
                     display: 'flex', 
                     overflowX: 'auto', 
