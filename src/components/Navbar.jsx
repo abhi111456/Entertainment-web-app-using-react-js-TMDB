@@ -7,7 +7,7 @@ import MovieCreationIcon from '@mui/icons-material/MovieCreation';
 import LiveTvIcon from "@mui/icons-material/LiveTv";
 import { Dashboard, LocalMovies } from "@mui/icons-material";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import { Avatar } from "@mui/material";
+import { Avatar,Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
@@ -37,7 +37,7 @@ export default function Navbar() {
          </ListItemButton>
        </ListItem>
      </Link>
-        <Link to='/tv' style={{ textDecoration: 'none' }}>
+        <Link to='/movie' style={{ textDecoration: 'none' }}>
       <ListItem role="none">
          <ListItemButton role="menuitem" component="div">
           <LocalMovies sx={{ color: 'gray' }} />
@@ -59,7 +59,9 @@ export default function Navbar() {
        </ListItem>
      </Link>
       </List>
-      <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/1.jpg" sx={{marginRight:'10px'}} />
+      <Tooltip title="Profile" arrow>
+        <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/1.jpg" sx={{ cursor: 'pointer',marginRight:'10px' }} />
+      </Tooltip>
     </Box>
   );
 }

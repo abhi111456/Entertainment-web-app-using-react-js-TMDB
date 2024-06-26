@@ -58,7 +58,7 @@ export default function LiveTv() {
                     </CardContent>
                 </Card>
             )) : (
-                <Typography level="h4" fontSize="lg" sx={{ color: 'text.primary', marginLeft: '5px' }}>No movies found</Typography>
+                <Typography level="h4" fontSize="lg" sx={{ color: 'red', marginLeft: '5px' }}>Loading.....</Typography>
             )}
         </Box>
         </>
