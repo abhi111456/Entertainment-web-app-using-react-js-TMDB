@@ -5,23 +5,30 @@ import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
-import debounce from 'lodash/debounce';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import IconButton from '@mui/joy/IconButton';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import debounce from 'lodash/debounce';
 
-export default function CardSty(props) {
+export default function SwitchInterface(props) {
     const [movieList, setMovieList] = React.useState([]);
+    const [showTrending, setShowTrending] = React.useState(false);
     const containerRef = React.useRef(null);
 
-    const getMovie = () => {
-        axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`)
+    const getMovies = (type) => {
+        const endpoint = type === 'trending' 
+            ? `https://api.themoviedb.org/3/trending/movie/day?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`
+            : `https://api.themoviedb.org/3/tv/airing_today?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`;
+        
+        axios.get(endpoint)
             .then(res => setMovieList(res.data.results))
             .catch(err => console.error('Error fetching movies:', err));
     };
 
     React.useEffect(() => {
-        getMovie();
-    }, []);
+        getMovies(showTrending ? 'trending' : 'today');
+    }, [showTrending]);
 
     const handleScroll = debounce((event) => {
         if (containerRef.current) {
@@ -64,13 +71,48 @@ export default function CardSty(props) {
 
     return (
         <>
-            <Typography 
-                level="h2" 
-                fontSize="xl" 
-                sx={{ color: 'white', ml: '25px', fontSize: '24px', fontWeight: 'bold' }}
-            >
-                Latest
-            </Typography>
+            <div style={{ display: 'flex', alignItems: 'center', marginLeft: '25px', marginTop: '20px' }}>
+                <Typography 
+                    level="h2" 
+                    fontSize="xl" 
+                    sx={{ color: 'white', fontSize: '28px', fontWeight: 'bold', marginRight: '20px', padding: '10px' }}
+                >
+                    Latest
+                </Typography>
+                <FormControlLabel
+                    control={<Switch 
+                        checked={showTrending} 
+                        onChange={() => setShowTrending(!showTrending)} 
+                        sx={{
+                            '& .MuiSwitch-thumb': {
+                                backgroundColor: showTrending ? '#f50057' : 'blue',
+                                width: 25,
+                                height: 26,
+                                '&:hover': {
+                                    backgroundColor: showTrending ? '#f50057' : 'white',
+                                }
+                            },
+                            '& .MuiSwitch-track': {
+                                backgroundColor: showTrending ? '#f50057' : 'white',
+                                opacity: 1,
+                                height: 25,
+                                width:48,
+                                borderRadius: 7,
+                            },
+                        
+
+                            
+                        }}
+                    />}
+                    label={showTrending ? 'Trending' : 'Today'}
+                    sx={{ color: 'white', 
+                        '& .MuiFormControlLabel-label': {
+                            fontSize: '20px',
+                            fontWeight: 'bold',
+                        },
+                     }}
+                />
+            </div>
             <div 
                 ref={containerRef}
                 style={{ 
@@ -81,7 +123,10 @@ export default function CardSty(props) {
                     cursor: 'grab', 
                     scrollBehavior: 'smooth', 
                     msOverflowStyle: 'none', 
-                    scrollbarWidth: 'none' 
+                    scrollbarWidth: 'none',
+                    whiteSpace: 'nowrap',
+                    marginTop: '10px',
+                    marginBottom: '20px',
                 }}
                 className="hide-scrollbar"
             >
@@ -89,16 +134,16 @@ export default function CardSty(props) {
                     <Card key={movie.id} sx={{ minHeight: '200px', width: 390, flex: '0 0 auto' }}>
                         <CardCover>
                             <img
-                                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                                src={`https://image.tmdb.org/t/p/w500${showTrending ? movie.poster_path : movie.backdrop_path}`}
                                 loading="lazy"
-                                alt={movie.title}
+                                alt={showTrending ? movie.title : movie.name}
                             />
                             <IconButton
                                 aria-label="add to watchlist"
                                 sx={{
                                     position: 'absolute',
-                                    top: '0px',
-                                    right: '0px',
+                                    top: '10px',
+                                    right: '10px',
                                     color: 'white',
                                     backgroundColor: 'rgba(0,0,0,0.5)',
                                     '&:hover': {
@@ -106,9 +151,8 @@ export default function CardSty(props) {
                                     }
                                 }}
                             >
-                                <BookmarkBorderIcon/>
+                                <BookmarkBorderIcon />
                             </IconButton>
-                            
                         </CardCover>
                         <CardCover
                             sx={{
@@ -118,13 +162,13 @@ export default function CardSty(props) {
                         />
                         <CardContent sx={{ justifyContent: 'flex-end' }}>
                             <Typography level="title-lg" textColor="#fff">
-                                {movie.title}
+                                {showTrending ? movie.title : movie.name}
                             </Typography>
                             <Typography
                                 startDecorator={<LocationOnRoundedIcon />}
                                 textColor="neutral.300"
                             >
-                                {movie.release_date}
+                                {showTrending ? movie.release_date : movie.first_air_date}
                             </Typography>
                         </CardContent>
                     </Card>
