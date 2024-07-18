@@ -8,15 +8,26 @@ import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import debounce from 'lodash/debounce';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import IconButton from '@mui/joy/IconButton';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import AspectRatio from '@mui/joy/AspectRatio';
+import { PlayArrow } from '@mui/icons-material';
 
 export default function CardSty(props) {
     const [movieList, setMovieList] = React.useState([]);
+    const [selectedMovie, setSelectedMovie] = React.useState(null);
     const containerRef = React.useRef(null);
 
     const getMovie = () => {
         axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`)
             .then(res => setMovieList(res.data.results))
             .catch(err => console.error('Error fetching movies:', err));
+    };
+
+    const getMovieVideo = (movieId) => {
+        return axios.get(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`)
+            .then(res => res.data.results.find(video => video.type === 'Trailer' && video.site === 'YouTube'))
+            .catch(err => console.error('Error fetching movie video:', err));
     };
 
     React.useEffect(() => {
@@ -62,6 +73,20 @@ export default function CardSty(props) {
         };
     }, []);
 
+    const handleCardClick = async (movie) => {
+        const video = await getMovieVideo(movie.id);
+        if (video) {
+            setSelectedMovie({
+                title: movie.title,
+                videoUrl: `https://www.youtube.com/embed/${video.key}`
+            });
+        }
+    };
+
+    const handleClose = () => {
+        setSelectedMovie(null);
+    };
+
     return (
         <>
             <Typography 
@@ -86,7 +111,11 @@ export default function CardSty(props) {
                 className="hide-scrollbar"
             >
                 {movieList.length > 0 ? movieList.map((movie) => (
-                    <Card key={movie.id} sx={{ minHeight: '200px', width: 390, flex: '0 0 auto' }}>
+                    <Card 
+                        key={movie.id} 
+                        sx={{ minHeight: '200px', width: 390, flex: '0 0 auto' }}
+                        onClick={() => handleCardClick(movie)}
+                    >
                         <CardCover>
                             <img
                                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -108,7 +137,24 @@ export default function CardSty(props) {
                             >
                                 <BookmarkBorderIcon/>
                             </IconButton>
-                            
+                            <IconButton
+                                aria-label="play video"
+                                sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    color: 'white',
+                                    backgroundColor: '#FF0000',
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(0,0,0,0.7)',
+                                    }
+                                }}
+                             
+                            >
+                                <PlayArrow />
+                            </IconButton>
+
                         </CardCover>
                         <CardCover
                             sx={{
@@ -127,9 +173,28 @@ export default function CardSty(props) {
                                 {movie.release_date}
                             </Typography>
                         </CardContent>
+                        
                     </Card>
                 )) : <Typography level="h4" fontSize="lg" sx={{ color: 'white', marginLeft: '5px' }}>Loading...</Typography>}
             </div>
+            {selectedMovie && (
+                <Modal open={Boolean(selectedMovie)} onClose={handleClose}>
+                    <ModalDialog>
+                        <Typography level="h2" sx={{ mb: 2 }}>{selectedMovie.title}</Typography>
+                        <AspectRatio ratio="16/9">
+                            <iframe
+                                width="100%"
+                                height="100%"
+                                 src={selectedMovie.videoUrl}
+                                title={selectedMovie.title}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            ></iframe>
+                        </AspectRatio>
+                    </ModalDialog>
+                </Modal>
+            )}
             <style jsx>{`
                 .hide-scrollbar {
                     -ms-overflow-style: none;  /* Internet Explorer 10+ */

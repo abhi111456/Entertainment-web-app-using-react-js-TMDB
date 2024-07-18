@@ -4,20 +4,57 @@ import Card from '@mui/joy/Card';
 import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
-import { Box } from '@mui/joy';
+import { Box, IconButton, Modal, ModalDialog, AspectRatio } from '@mui/joy';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 
 export default function Cardd(props) {
     const [movieList, setMovieList] = React.useState([]);
+    const [selectedMovie, setSelectedMovie] = React.useState(null);
 
-    const getMovie = () => {
-        axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`)
-            .then(res => setMovieList(res.data.results))
-            .catch(err => console.error('Error fetching movies:', err));
+    // Fetch movies from TMDb API
+    const getMovies = async () => {
+        try {
+            const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`);
+            setMovieList(response.data.results);
+        } catch (error) {
+            console.error('Error fetching movies:', error);
+        }
     };
 
+    // Fetch video for a specific movie from TMDb API
+    const getMovieVideo = async (movieId) => {
+        try {
+            const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`);
+            const video = response.data.results.find(video => video.type === 'Trailer' && video.site === 'YouTube');
+            return video ? `https://www.youtube.com/embed/${video.key}` : null;
+        } catch (error) {
+            console.error('Error fetching movie video:', error);
+            return null;
+        }
+    };
+
+    // Load movies on component mount
     React.useEffect(() => {
-        getMovie();
+        getMovies();
     }, []);
+
+    // Handle click on a movie card
+    const handleCardClick = async (movie) => {
+        const videoUrl = await getMovieVideo(movie.id);
+        if (videoUrl) {
+            setSelectedMovie({
+                title: movie.title,
+                videoUrl: videoUrl
+            });
+        } else {
+            console.log('No trailer available for this movie.');
+        }
+    };
+
+    // Close the modal
+    const handleClose = () => {
+        setSelectedMovie(null);
+    };
 
     return (
         <>
@@ -26,9 +63,8 @@ export default function Cardd(props) {
                 fontSize="xl" 
                 sx={{ mb: 2, color: 'white', ml: '25px', fontSize: '24px', fontWeight: 'bold' }}
             >
-                Recommended for you
+                Recommended Movies
             </Typography>
-          
             <Box 
                 sx={{ 
                     display: 'grid', 
@@ -49,20 +85,36 @@ export default function Cardd(props) {
                             transition: 'transform 0.3s ease', 
                             '&:hover': { transform: 'scale(1.05)' } 
                         }}
+                        onClick={() => handleCardClick(movie)}
                     >
                         <CardCover>
                             <img
-                                src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+                                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                                 loading="lazy"
                                 alt={movie.title}
                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                             />
+                            <IconButton
+                                aria-label="play video"
+                                sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    color: 'white',
+                                    backgroundColor: '#FF0000',
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(0,0,0,0.7)',
+                                    }
+                                }}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Prevent card click event from firing
+                                    handleCardClick(movie);
+                                }}
+                            >
+                                <PlayCircleOutlineIcon fontSize="large" />
+                            </IconButton>
                         </CardCover>
-                        <CardCover
-                            sx={{
-                                background: 'linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 60%)',
-                            }}
-                        />
                         <CardContent sx={{ 
                             position: 'absolute', 
                             bottom: '0', 
@@ -82,7 +134,7 @@ export default function Cardd(props) {
                                     fontWeight: 'bold' 
                                 }}
                             >
-                                {movie.original_name}
+                                {movie.title}
                             </Typography>
                             <Typography 
                                 sx={{ 
@@ -91,7 +143,7 @@ export default function Cardd(props) {
                                     color: 'gray.300' 
                                 }}
                             >
-                                {movie.vote_average}
+                                {movie.release_date}
                             </Typography>
                         </CardContent>
                     </Card>
@@ -105,6 +157,26 @@ export default function Cardd(props) {
                     </Typography>
                 )}
             </Box>
+
+            {/* Modal for displaying video */}
+            {selectedMovie && (
+                <Modal open={Boolean(selectedMovie)} onClose={handleClose}>
+                    <ModalDialog>
+                        <Typography level="h2" sx={{ mb: 2 }}>{selectedMovie.title}</Typography>
+                        <AspectRatio ratio="16/9">
+                            <iframe
+                                width="100%"
+                                height="100%"
+                                src={selectedMovie.videoUrl}
+                                title={selectedMovie.title}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            ></iframe>
+                        </AspectRatio>
+                    </ModalDialog>
+                </Modal>
+            )}
         </>
     );
 }

@@ -10,20 +10,35 @@ import IconButton from '@mui/joy/IconButton';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import debounce from 'lodash/debounce';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import AspectRatio from '@mui/joy/AspectRatio';
 
 export default function SwitchInterface(props) {
     const [movieList, setMovieList] = React.useState([]);
     const [showTrending, setShowTrending] = React.useState(false);
+    const [loading, setLoading] = React.useState(true);
+    const [error, setError] = React.useState(null);
     const containerRef = React.useRef(null);
+    const [selectedMovie, setSelectedMovie] = React.useState(null);
 
     const getMovies = (type) => {
+        setLoading(true);
         const endpoint = type === 'trending' 
             ? `https://api.themoviedb.org/3/trending/movie/day?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`
             : `https://api.themoviedb.org/3/tv/airing_today?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`;
         
         axios.get(endpoint)
-            .then(res => setMovieList(res.data.results))
-            .catch(err => console.error('Error fetching movies:', err));
+            .then(res => {
+                setMovieList(res.data.results);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError('Error fetching movies');
+                setLoading(false);
+                console.error('Error fetching movies:', err);
+            });
     };
 
     React.useEffect(() => {
@@ -69,6 +84,34 @@ export default function SwitchInterface(props) {
         };
     }, []);
 
+    const getMovieVideo = async (movieId) => {
+        try {
+            const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`);
+            const video = response.data.results.find(video => video.type === 'Trailer' && video.site === 'YouTube');
+            return video ? `https://www.youtube.com/embed/${video.key}` : null;
+        } catch (error) {
+            console.error('Error fetching movie video:', error);
+            return null;
+        }
+    };
+    
+    const handlePlayClick = async (movie) => {
+        const videoUrl = await getMovieVideo(movie.id);
+        if (videoUrl) {
+            setSelectedMovie({
+                title: showTrending ? movie.title : movie.name,
+                videoUrl: videoUrl
+            });
+        } else {
+            console.log('No trailer available for this movie.');
+        }
+    };
+    
+
+    const handleClose = () => {
+        setSelectedMovie(null);
+    };
+
     return (
         <>
             <div style={{ display: 'flex', alignItems: 'center', marginLeft: '25px', marginTop: '20px' }}>
@@ -96,12 +139,9 @@ export default function SwitchInterface(props) {
                                 backgroundColor: showTrending ? '#f50057' : 'white',
                                 opacity: 1,
                                 height: 25,
-                                width:48,
+                                width: 48,
                                 borderRadius: 7,
-                            },
-                        
-
-                            
+                            }
                         }}
                     />}
                     label={showTrending ? 'Trending' : 'Today'}
@@ -110,7 +150,7 @@ export default function SwitchInterface(props) {
                             fontSize: '20px',
                             fontWeight: 'bold',
                         },
-                     }}
+                    }}
                 />
             </div>
             <div 
@@ -131,7 +171,7 @@ export default function SwitchInterface(props) {
                 className="hide-scrollbar"
             >
                 {movieList.length > 0 ? movieList.map((movie) => (
-                    <Card key={movie.id} sx={{ minHeight: '200px', width: 390, flex: '0 0 auto' }}>
+                    <Card key={movie.id} sx={{ minHeight: '200px', width: 390, flex: '0 0 auto', position: 'relative' }}>
                         <CardCover>
                             <img
                                 src={`https://image.tmdb.org/t/p/w500${showTrending ? movie.poster_path : movie.backdrop_path}`}
@@ -153,27 +193,53 @@ export default function SwitchInterface(props) {
                             >
                                 <BookmarkBorderIcon />
                             </IconButton>
+                            <PlayCircleOutlineIcon
+                                fontSize="large"
+                                sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                     backgroundColor: '#FF0000',
+                                    transform: 'translate(-50%, -50%)',
+                                    color: 'white',
+                                    visibility: 'visible',
+                                    '&:hover': {
+                                        color: '#f50057',
+                                        cursor: 'pointer',
+                                    }
+                                }}
+                                onClick={() => handlePlayClick(movie)}
+                            />
                         </CardCover>
-                        <CardCover
-                            sx={{
-                                background:
-                                    'linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)',
-                            }}
-                        />
-                        <CardContent sx={{ justifyContent: 'flex-end' }}>
-                            <Typography level="title-lg" textColor="#fff">
-                                {showTrending ? movie.title : movie.name}
-                            </Typography>
-                            <Typography
-                                startDecorator={<LocationOnRoundedIcon />}
-                                textColor="neutral.300"
-                            >
-                                {showTrending ? movie.release_date : movie.first_air_date}
-                            </Typography>
-                        </CardContent>
                     </Card>
-                )) : <Typography level="h4" fontSize="lg" sx={{ color: 'white', marginLeft: '5px' }}>Loading...</Typography>}
+                )) : loading ? (
+                    <Typography level="h4" fontSize="lg" sx={{ color: 'white', marginLeft: '5px' }}>Loading...</Typography>
+                ) : (
+                    <Typography level="h4" fontSize="lg" sx={{ color: 'white', marginLeft: '5px' }}>No movies found</Typography>
+                )}
             </div>
+
+            <Modal open={Boolean(selectedMovie)} onClose={handleClose}>
+                <ModalDialog>
+                    {selectedMovie && (
+                        <React.Fragment>
+                            <Typography level="h2" sx={{ mb: 2 }}>{selectedMovie.title}</Typography>
+                            <AspectRatio ratio="16/9">
+                                <iframe
+                                    width="100%"
+                                    height="100%"
+                                    src={selectedMovie.videoUrl}
+                                    title={selectedMovie.title}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                            </AspectRatio>
+                        </React.Fragment>
+                    )}
+                </ModalDialog>
+            </Modal>
+
             <style jsx>{`
                 .hide-scrollbar {
                     -ms-overflow-style: none;  /* Internet Explorer 10+ */
