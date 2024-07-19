@@ -6,7 +6,7 @@ import { Dashboard, LocalMovies } from "@mui/icons-material";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, Tooltip, InputBase, IconButton, Popover, Typography, CircularProgress } from "@mui/material";
+import { Avatar, Tooltip, InputBase, IconButton, Popover, Typography, CircularProgress, Drawer, List, ListItem, ListItemButton } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { debounce } from "lodash";
@@ -16,6 +16,7 @@ export default function Navbar() {
   const [movies, setMovies] = React.useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate();
 
   // Debounced search function
@@ -83,6 +84,50 @@ export default function Navbar() {
     handleClose();
   };
 
+  // Toggle mobile menu
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const drawer = (
+    <Box sx={{ width: 250 }} onClick={handleDrawerToggle}>
+      <List>
+        <ListItem>
+          <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+            <ListItemButton>
+              <Dashboard sx={{ color: 'gray' }} />
+              <Typography variant="body2" sx={{ marginLeft: '16px' }}>Dashboard</Typography>
+            </ListItemButton>
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link to='/movie' style={{ textDecoration: 'none', color: 'inherit' }}>
+            <ListItemButton>
+              <LocalMovies sx={{ color: 'gray' }} />
+              <Typography variant="body2" sx={{ marginLeft: '16px' }}>Movies</Typography>
+            </ListItemButton>
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link to='/latest' style={{ textDecoration: 'none', color: 'inherit' }}>
+            <ListItemButton>
+              <LiveTvIcon sx={{ color: 'gray' }} />
+              <Typography variant="body2" sx={{ marginLeft: '16px' }}>Latest</Typography>
+            </ListItemButton>
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link to='/bookmark' style={{ textDecoration: 'none', color: 'inherit' }}>
+            <ListItemButton>
+              <BookmarkIcon sx={{ color: 'gray' }} />
+              <Typography variant="body2" sx={{ marginLeft: '16px' }}>Bookmarks</Typography>
+            </ListItemButton>
+          </Link>
+        </ListItem>
+      </List>
+    </Box>
+  );
+
   return (
     <Box sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', height: '60px',
       backgroundColor: '#171D2F', color: 'skyblue', padding: '0 16px', boxSizing: 'border-box', borderRadius: '20px'
@@ -95,7 +140,7 @@ export default function Navbar() {
             placeholder="Search movies..."
             value={searchTerm}
             onChange={handleSearchChange}
-            onKeyDown={handleKeyDown} // Make sure this is correctly bound
+            onKeyDown={handleKeyDown}
             sx={{ color: 'white', flex: 1 }}
           />
           <IconButton onClick={handleClick} sx={{ padding: '8px', color: '#FF9800' }}>
@@ -162,11 +207,20 @@ export default function Navbar() {
         </Tooltip>
 
         <Box sx={{ display: { xs: 'flex', sm: 'none' }, alignItems: 'center' }}>
-          <IconButton onClick={handleClick}>
+          <IconButton onClick={handleDrawerToggle}>
             <MenuIcon sx={{ color: 'gray' }} />
           </IconButton>
         </Box>
       </Box>
+
+      {/* Mobile Menu Drawer */}
+      <Drawer
+        anchor="left"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+      >
+        {drawer}
+      </Drawer>
     </Box>
   );
 }
