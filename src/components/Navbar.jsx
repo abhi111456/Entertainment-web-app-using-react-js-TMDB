@@ -22,6 +22,7 @@ export default function Navbar() {
   // Debounced search function
   const debouncedSearch = React.useCallback(
     debounce(async (query) => {
+      console.log("Searching for:", query); // Debugging log
       if (query.trim() === "") {
         setMovies([]);
         return;
@@ -62,6 +63,8 @@ export default function Navbar() {
   // Handle Enter key press
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent default form submission behavior
+      console.log("Enter key pressed, searching for:", searchTerm); // Debugging log
       debouncedSearch(searchTerm); // Trigger search immediately
     }
   };

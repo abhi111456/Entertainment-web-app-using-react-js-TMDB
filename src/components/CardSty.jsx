@@ -5,13 +5,13 @@ import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
-import debounce from 'lodash/debounce';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import IconButton from '@mui/joy/IconButton';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import AspectRatio from '@mui/joy/AspectRatio';
-import { PlayArrow } from '@mui/icons-material';
+import PlayArrow from '@mui/icons-material/PlayArrow';
+import YouTubeIcon from '@mui/icons-material/YouTube';// Import YouTube icon
 
 export default function CardSty(props) {
     const [movieList, setMovieList] = React.useState([]);
@@ -34,43 +34,18 @@ export default function CardSty(props) {
         getMovie();
     }, []);
 
-    const handleScroll = debounce((event) => {
-        if (containerRef.current) {
-            containerRef.current.scrollBy({
-                left: event.deltaY > 0 ? 100 : -100,
-                behavior: 'smooth'
-            });
-        }
-    }, 50);
-
-    const handleKeyDown = (event) => {
-        if (containerRef.current) {
-            if (event.key === 'ArrowRight') {
-                containerRef.current.scrollBy({
-                    left: 100,
-                    behavior: 'smooth'
-                });
-            } else if (event.key === 'ArrowLeft') {
-                containerRef.current.scrollBy({
-                    left: -100,
-                    behavior: 'smooth'
-                });
-            }
-        }
-    };
-
     React.useEffect(() => {
         const container = containerRef.current;
         if (container) {
-            container.addEventListener('wheel', handleScroll);
-            window.addEventListener('keydown', handleKeyDown);
+            const intervalId = setInterval(() => {
+                container.scrollBy({
+                    left: 100,
+                    behavior: 'smooth'
+                });
+            }, 3000); // Scroll every 3 seconds
+
+            return () => clearInterval(intervalId);
         }
-        return () => {
-            if (container) {
-                container.removeEventListener('wheel', handleScroll);
-            }
-            window.removeEventListener('keydown', handleKeyDown);
-        };
     }, []);
 
     const handleCardClick = async (movie) => {
@@ -92,7 +67,7 @@ export default function CardSty(props) {
             <Typography 
                 level="h2" 
                 fontSize="xl" 
-                sx={{ color: 'white', ml: '25px', fontSize: '24px', fontWeight: 'bold' }}
+                sx={{ color: 'white', ml: '25px', fontSize: '24px', fontWeight: 'bold',marginTop:'10px' }}
             >
                 Latest
             </Typography>
@@ -105,10 +80,10 @@ export default function CardSty(props) {
                     gap: '10px', 
                     cursor: 'grab', 
                     scrollBehavior: 'smooth', 
-                    msOverflowStyle: 'none', 
-                    scrollbarWidth: 'none' 
+                    scrollbarWidth: 'none', /* Firefox */
+                    msOverflowStyle: 'none' /* IE and Edge */
                 }}
-                className="hide-scrollbar"
+                className="scroll-container"
             >
                 {movieList.length > 0 ? movieList.map((movie) => (
                     <Card 
@@ -138,7 +113,7 @@ export default function CardSty(props) {
                                 <BookmarkBorderIcon/>
                             </IconButton>
                             <IconButton
-                                aria-label="play video"
+                             fontSize="large"
                                 sx={{
                                     position: 'absolute',
                                     top: '50%',
@@ -146,15 +121,57 @@ export default function CardSty(props) {
                                     transform: 'translate(-50%, -50%)',
                                     color: 'white',
                                     backgroundColor: '#FF0000',
+                                    borderRadius: '20%',
+                                    padding: '8px', // Matching padding
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(255,0,0,0.7)',
+                                    }
+                                }}ick={(e) => {
+                                    e.stopPropagation(); // Prevent card click event from firing
+                                    handleCardClick(movie);
+                                }}
+                            >
+                                <PlayArrow />
+                            </IconButton>
+                            <IconButton
+                                aria-label="view on youtube"
+                                sx={{
+                                    position: 'absolute',
+                                    bottom: '10px',
+                                    right: '10px',
+                                    color: 'white',
+                                    backgroundColor: 'rgba(0,0,0,0.5)',
                                     '&:hover': {
                                         backgroundColor: 'rgba(0,0,0,0.7)',
                                     }
                                 }}
-                             
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Prevent card click event from firing
+                                    window.open(`https://www.youtube.com/watch?v=${movie.id}`, '_blank');
+                                }}
                             >
-                                <PlayArrow />
+                                <YouTubeIcon />
                             </IconButton>
-
+                            <IconButton
+                                aria-label="another youtube link"
+                                sx={{
+                                    position: 'absolute',
+                                    bottom: '50px', // Adjust position as needed
+                                    right: '10px',
+                                    color: 'white',
+                                    backgroundColor: 'rgba(0,0,0,0.5)',
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(0,0,0,0.7)',
+                                    }
+                                }}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Prevent card click event from firing
+                                    window.open(`https://www.youtube.com/watch?v=${movie.id}`, '_blank');
+                                }}
+                            >
+                                <YouTubeIcon />
+                            </IconButton>
                         </CardCover>
                         <CardCover
                             sx={{
@@ -173,7 +190,6 @@ export default function CardSty(props) {
                                 {movie.release_date}
                             </Typography>
                         </CardContent>
-                        
                     </Card>
                 )) : <Typography level="h4" fontSize="lg" sx={{ color: 'white', marginLeft: '5px' }}>Loading...</Typography>}
             </div>
@@ -185,7 +201,7 @@ export default function CardSty(props) {
                             <iframe
                                 width="100%"
                                 height="100%"
-                                 src={selectedMovie.videoUrl}
+                                src={selectedMovie.videoUrl}
                                 title={selectedMovie.title}
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -196,13 +212,22 @@ export default function CardSty(props) {
                 </Modal>
             )}
             <style jsx>{`
-                .hide-scrollbar {
-                    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-                    scrollbar-width: none;  /* Firefox */
+                .scroll-container::-webkit-scrollbar {
+                    height: 8px;
                 }
 
-                .hide-scrollbar::-webkit-scrollbar { 
-                    display: none;  /* Safari and Chrome */
+                .scroll-container::-webkit-scrollbar-thumb {
+                    background-color: rgba(0,0,0,0.5);
+                    border-radius: 4px;
+                }
+
+                .scroll-container::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+
+                .scroll-container {
+                    scrollbar-width: thin;
+                    scrollbar-color: rgba(0,0,0,0.5) transparent;
                 }
             `}</style>
         </>

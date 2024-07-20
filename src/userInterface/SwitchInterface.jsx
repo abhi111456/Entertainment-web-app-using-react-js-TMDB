@@ -2,18 +2,16 @@ import * as React from 'react';
 import axios from 'axios';
 import Card from '@mui/joy/Card';
 import CardCover from '@mui/joy/CardCover';
-import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
-import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import IconButton from '@mui/joy/IconButton';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import debounce from 'lodash/debounce';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import YouTubeIcon from '@mui/icons-material/YouTube';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import AspectRatio from '@mui/joy/AspectRatio';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import debounce from 'lodash/debounce';
 
 export default function SwitchInterface(props) {
     const [movieList, setMovieList] = React.useState([]);
@@ -94,7 +92,7 @@ export default function SwitchInterface(props) {
             return null;
         }
     };
-    
+
     const handlePlayClick = async (movie) => {
         const videoUrl = await getMovieVideo(movie.id);
         if (videoUrl) {
@@ -106,7 +104,6 @@ export default function SwitchInterface(props) {
             console.log('No trailer available for this movie.');
         }
     };
-    
 
     const handleClose = () => {
         setSelectedMovie(null);
@@ -122,36 +119,42 @@ export default function SwitchInterface(props) {
                 >
                     Latest
                 </Typography>
-                <FormControlLabel
-                    control={<Switch 
-                        checked={showTrending} 
-                        onChange={() => setShowTrending(!showTrending)} 
-                        sx={{
-                            '& .MuiSwitch-thumb': {
-                                backgroundColor: showTrending ? '#f50057' : 'blue',
-                                width: 25,
-                                height: 26,
-                                '&:hover': {
-                                    backgroundColor: showTrending ? '#f50057' : 'white',
-                                }
-                            },
-                            '& .MuiSwitch-track': {
-                                backgroundColor: showTrending ? '#f50057' : 'white',
-                                opacity: 1,
-                                height: 25,
-                                width: 48,
-                                borderRadius: 7,
-                            }
-                        }}
-                    />}
-                    label={showTrending ? 'Trending' : 'Today'}
-                    sx={{ color: 'white', 
-                        '& .MuiFormControlLabel-label': {
-                            fontSize: '20px',
-                            fontWeight: 'bold',
-                        },
+                <ToggleButtonGroup
+                    value={showTrending ? 'trending' : 'today'}
+                    exclusive
+                    onChange={(event, value) => setShowTrending(value === 'trending')}
+                    sx={{
+                        backgroundColor: 'white',
+                        borderRadius: '25px',
                     }}
-                />
+                >
+                    <ToggleButton 
+                        value="today" 
+                        sx={{ 
+                            color: showTrending ? 'black' : 'white',
+                            backgroundColor: showTrending ? 'white' : '#f50057',
+                            borderRadius: '25px 0 0 25px',
+                            '&:hover': {
+                                backgroundColor: showTrending ? 'lightgray' : '#d4004f',
+                            },
+                        }}
+                    >
+                        Today
+                    </ToggleButton>
+                    <ToggleButton 
+                        value="trending" 
+                        sx={{ 
+                            color: showTrending ? 'white' : 'black',
+                            backgroundColor: showTrending ? '#f50057' : 'white',
+                            borderRadius: '0 25px 25px 0',
+                            '&:hover': {
+                                backgroundColor: showTrending ? '#d4004f' : 'lightgray',
+                            },
+                        }}
+                    >
+                        Trending
+                    </ToggleButton>
+                </ToggleButtonGroup>
             </div>
             <div 
                 ref={containerRef}
@@ -193,15 +196,17 @@ export default function SwitchInterface(props) {
                             >
                                 <BookmarkBorderIcon />
                             </IconButton>
-                            <PlayCircleOutlineIcon
+                            <YouTubeIcon
                                 fontSize="large"
                                 sx={{
                                     position: 'absolute',
                                     top: '50%',
                                     left: '50%',
-                                     backgroundColor: '#FF0000',
+                                    backgroundColor: '#FF0000',
                                     transform: 'translate(-50%, -50%)',
                                     color: 'white',
+                                    padding:'8px',
+                                    borderRadius: '20%',
                                     visibility: 'visible',
                                     '&:hover': {
                                         color: '#f50057',

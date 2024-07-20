@@ -5,7 +5,7 @@ import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import { Box, IconButton, Modal, ModalDialog, AspectRatio } from '@mui/joy';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import YouTubeIcon from '@mui/icons-material/YouTube';
 
 export default function Cardd(props) {
     const [movieList, setMovieList] = React.useState([]);
@@ -61,7 +61,7 @@ export default function Cardd(props) {
             <Typography 
                 level="h2" 
                 fontSize="xl" 
-                sx={{ mb: 2, color: 'white', ml: '25px', fontSize: '24px', fontWeight: 'bold' }}
+                sx={{ mb: 2, color: 'white', ml: '25px', fontSize: '24px', fontWeight: 'bold',marginTop:'10px' }}
             >
                 Recommended Movies
             </Typography>
@@ -95,7 +95,7 @@ export default function Cardd(props) {
                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                             />
                             <IconButton
-                                aria-label="play video"
+                               fontSize="large"
                                 sx={{
                                     position: 'absolute',
                                     top: '50%',
@@ -103,8 +103,11 @@ export default function Cardd(props) {
                                     transform: 'translate(-50%, -50%)',
                                     color: 'white',
                                     backgroundColor: '#FF0000',
+                                    borderRadius: '20%',
+                                    padding: '8px', // Matching padding
+                                    cursor: 'pointer',
                                     '&:hover': {
-                                        backgroundColor: 'rgba(0,0,0,0.7)',
+                                        backgroundColor: 'rgba(255,0,0,0.7)',
                                     }
                                 }}
                                 onClick={(e) => {
@@ -112,13 +115,13 @@ export default function Cardd(props) {
                                     handleCardClick(movie);
                                 }}
                             >
-                                <PlayCircleOutlineIcon fontSize="large" />
+                                <YouTubeIcon fontSize="large" />
                             </IconButton>
                         </CardCover>
                         <CardContent sx={{ 
                             position: 'absolute', 
                             bottom: '0', 
-                            left:'0',
+                            left: '0',
                             width: '100%', 
                             color: 'white', 
                             padding: '8px', 
@@ -129,7 +132,7 @@ export default function Cardd(props) {
                                 level="h5" 
                                 sx={{ 
                                     mb: 0.5, 
-                                    textAlign:'center' ,
+                                    textAlign: 'center',
                                     fontSize: '16px', 
                                     fontWeight: 'bold' 
                                 }}
@@ -138,7 +141,7 @@ export default function Cardd(props) {
                             </Typography>
                             <Typography 
                                 sx={{ 
-                                    textAlign:'center' ,
+                                    textAlign: 'center',
                                     fontSize: '14px', 
                                     color: 'gray.300' 
                                 }}

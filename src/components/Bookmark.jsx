@@ -5,7 +5,7 @@ import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import { Box } from '@mui/joy';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import YouTubeIcon from '@mui/icons-material/YouTube'; // Import YouTube icon
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import AspectRatio from '@mui/joy/AspectRatio';
@@ -73,7 +73,7 @@ export default function Bookmark() {
                     <Card key={movie.id} sx={{ minHeight: '300px', maxHeight: '400px', position: 'relative', overflow: 'hidden', borderRadius: '16px', transition: 'transform 0.3s ease', '&:hover': { transform: 'scale(1.05)' } }}>
                         <CardCover>
                             <img src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`} loading="lazy" alt={movie.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            <PlayCircleOutlineIcon
+                            <YouTubeIcon
                                 fontSize="large"
                                 sx={{
                                     position: 'absolute',
@@ -82,9 +82,9 @@ export default function Bookmark() {
                                     transform: 'translate(-50%, -50%)',
                                     color: 'white',
                                     backgroundColor: '#FF0000',
-                                    borderRadius: '50%',
+                                    borderRadius: '20%',
+                                    padding: '8px', // Matching padding
                                     cursor: 'pointer',
-                                    visibility: 'visible', // Ensure play icon is always visible
                                     '&:hover': {
                                         backgroundColor: 'rgba(255,0,0,0.7)',
                                     }
