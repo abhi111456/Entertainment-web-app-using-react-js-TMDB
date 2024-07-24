@@ -42,7 +42,7 @@ export default function CardSty(props) {
                     left: 100,
                     behavior: 'smooth'
                 });
-            }, 3000); // Scroll every 3 seconds
+            }, 1000); // Scroll every 1 seconds
 
             return () => clearInterval(intervalId);
         }

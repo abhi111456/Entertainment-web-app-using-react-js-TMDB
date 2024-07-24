@@ -5,6 +5,7 @@ import LiveTvIcon from "@mui/icons-material/LiveTv";
 import { Dashboard, LocalMovies } from "@mui/icons-material";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import SearchIcon from '@mui/icons-material/Search';
+import MicIcon from '@mui/icons-material/Mic';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Avatar, Tooltip, InputBase, IconButton, Popover, Typography, CircularProgress, Drawer, List, ListItem, ListItemButton } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
@@ -92,6 +93,26 @@ export default function Navbar() {
     setMobileOpen(!mobileOpen);
   };
 
+  // Voice search functionality
+  const handleVoiceSearch = () => {
+    const recognition = new window.webkitSpeechRecognition() || new window.SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.start();
+
+    recognition.onresult = (event) => {
+      const speechResult = event.results[0][0].transcript;
+      setSearchTerm(speechResult);
+      debouncedSearch(speechResult);
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Error occurred in recognition: ", event.error);
+    };
+  };
+
   const drawer = (
     <Box sx={{ width: 250 }} onClick={handleDrawerToggle}>
       <List>
@@ -148,6 +169,9 @@ export default function Navbar() {
           />
           <IconButton onClick={handleClick} sx={{ padding: '8px', color: '#FF9800' }}>
             <SearchIcon sx={{ fontSize: '24px' }} />
+          </IconButton>
+          <IconButton onClick={handleVoiceSearch} sx={{ padding: '8px', color: '#FF9800' }}>
+            <MicIcon sx={{ fontSize: '24px' }} />
           </IconButton>
         </Box>
 
@@ -218,7 +242,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Drawer */}
       <Drawer
-        anchor="left"
+        anchor="center"
         open={mobileOpen}
         onClose={handleDrawerToggle}
       >
