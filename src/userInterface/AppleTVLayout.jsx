@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -102,6 +102,11 @@ const LoadingContainer = styled.div`
 
 const StyledTabs = styled(Tabs)`
   // Dark background for the tabs container
+  background-color: #2E3B4E;
+  color:white;
+  font-size: 18px;
+  font-weight: 600;
+  
   border-radius: 8px;
 
   .MuiTabs-flexContainer {
@@ -113,11 +118,11 @@ const StyledTab = styled(Tab)`
   font-size: 16px;
   font-weight: 600;
   text-transform: none;
-  color: white;
+  color: blue;
   padding: 12px 24px;
 
   &.Mui-selected {
-    color: #ff0000; // Red color for selected tab
+    color: black; // Red color for selected tab
     background-color: rgba(255, 0, 0, 0.1); // Light red background for selected tab
   }
 
@@ -149,6 +154,7 @@ export default function AppleTVLayout() {
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("streaming");
   const navigate = useNavigate();
+  const carouselRef = useRef(null);
 
   const fetchMovies = async (category) => {
     setLoading(true);
@@ -176,6 +182,18 @@ export default function AppleTVLayout() {
   useEffect(() => {
     fetchMovies(category);
   }, [category]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (carouselRef.current) {
+        carouselRef.current.scrollBy({
+          left: 200,
+          behavior: "smooth",
+        });
+      }
+    }, 2000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   const handleCategoryChange = (event, newValue) => {
     setCategory(newValue);
@@ -223,7 +241,7 @@ export default function AppleTVLayout() {
           </StyledTabs>
         </MobileContainer>
       </Box>
-      <MovieCarousel>
+      <MovieCarousel ref={carouselRef}>
         {movies.map((movie) => (
           <MovieCard key={movie.id} onClick={() => handleMovieClick(movie.id)}>
             <MoviePoster

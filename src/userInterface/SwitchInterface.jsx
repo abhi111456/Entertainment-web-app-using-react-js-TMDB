@@ -109,6 +109,18 @@ export default function SwitchInterface(props) {
         setSelectedMovie(null);
     };
 
+    React.useEffect(() => {
+        const intervalId = setInterval(() => {
+            if (containerRef.current) {
+                containerRef.current.scrollBy({
+                    left: 100,
+                    behavior: 'smooth'
+                });
+            }
+        }, 3000);
+        return () => clearInterval(intervalId);
+    }, []);
+
     return (
         <>
             <div style={{ display: 'flex', alignItems: 'center', marginLeft: '25px', marginTop: '20px' }}>
@@ -132,10 +144,10 @@ export default function SwitchInterface(props) {
                         value="today" 
                         sx={{ 
                             color: showTrending ? 'black' : 'white',
-                            backgroundColor: showTrending ? 'white' : '#f50057',
+                            backgroundColor: showTrending ? '#c4bd9d' : '#c4bd9d',
                             borderRadius: '25px 0 0 25px',
                             '&:hover': {
-                                backgroundColor: showTrending ? 'lightgray' : '#d4004f',
+                                backgroundColor: showTrending ? '#575449' : '#575449',
                             },
                         }}
                     >
