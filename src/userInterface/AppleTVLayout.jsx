@@ -101,7 +101,7 @@ const LoadingContainer = styled.div`
 `;
 
 const StyledTabs = styled(Tabs)`
-  // Dark background for the tabs container
+
   background-color: #2E3B4E;
   color:white;
   font-size: 18px;
@@ -110,7 +110,7 @@ const StyledTabs = styled(Tabs)`
   border-radius: 8px;
 
   .MuiTabs-flexContainer {
-    flex-wrap: wrap; // Allow tabs to wrap in mobile view
+    flex-wrap: wrap; 
   }
 `;
 
@@ -122,13 +122,13 @@ const StyledTab = styled(Tab)`
   padding: 12px 24px;
 
   &.Mui-selected {
-    color: black; // Red color for selected tab
-    background-color: rgba(255, 0, 0, 0.1); // Light red background for selected tab
+    color: black; 
+    background-color: rgba(255, 0, 0, 0.1); 
   }
 
   &:hover {
-    color: #ff0000; // Red color on hover
-    background-color: rgba(255, 0, 0, 0.1); // Light red background on hover
+    color: #ff0000; 
+    background-color: rgba(255, 0, 0, 0.1); 
   }
 `;
 

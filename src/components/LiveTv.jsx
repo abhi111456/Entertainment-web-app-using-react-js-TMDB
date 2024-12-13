@@ -83,7 +83,7 @@ export default function LiveTv() {
                                     color: 'white',
                                     backgroundColor: '#FF0000',
                                     borderRadius: '20%',
-                                    padding: '8px', // Matching padding
+                                    padding: '8px',
                                     cursor: 'pointer',
                                     '&:hover': {
                                         backgroundColor: 'rgba(255,0,0,0.7)',

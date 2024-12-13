@@ -11,7 +11,7 @@ export default function Cardd(props) {
     const [movieList, setMovieList] = React.useState([]);
     const [selectedMovie, setSelectedMovie] = React.useState(null);
 
-    // Fetch movies from TMDb API
+    
     const getMovies = async () => {
         try {
             const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`);
@@ -21,7 +21,7 @@ export default function Cardd(props) {
         }
     };
 
-    // Fetch video for a specific movie from TMDb API
+    
     const getMovieVideo = async (movieId) => {
         try {
             const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${import.meta.env.VITE_APP_RAPID_API_KEY}`);
@@ -33,12 +33,12 @@ export default function Cardd(props) {
         }
     };
 
-    // Load movies on component mount
+   
     React.useEffect(() => {
         getMovies();
     }, []);
 
-    // Handle click on a movie card
+
     const handleCardClick = async (movie) => {
         const videoUrl = await getMovieVideo(movie.id);
         if (videoUrl) {
@@ -51,7 +51,7 @@ export default function Cardd(props) {
         }
     };
 
-    // Close the modal
+   
     const handleClose = () => {
         setSelectedMovie(null);
     };
@@ -111,7 +111,7 @@ export default function Cardd(props) {
                                     }
                                 }}
                                 onClick={(e) => {
-                                    e.stopPropagation(); // Prevent card click event from firing
+                                    e.stopPropagation(); 
                                     handleCardClick(movie);
                                 }}
                             >

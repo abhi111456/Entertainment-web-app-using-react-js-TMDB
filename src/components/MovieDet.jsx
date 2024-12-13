@@ -130,7 +130,7 @@ const MovieDet = () => {
   React.useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
-        // Fetch movie details
+        
         const movieResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {
           params: {
             api_key: import.meta.env.VITE_APP_RAPID_API_KEY,
@@ -139,7 +139,7 @@ const MovieDet = () => {
         });
         setMovie(movieResponse.data);
 
-        // Fetch movie videos
+       
         const videoResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/videos`, {
           params: {
             api_key: import.meta.env.VITE_APP_RAPID_API_KEY,
@@ -149,7 +149,7 @@ const MovieDet = () => {
         const trailer = videoResponse.data.results.find(video => video.type === 'Trailer');
         setVideo(trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null);
 
-        // Fetch movie cast and crew
+       
         const creditsResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
           params: {
             api_key: import.meta.env.VITE_APP_RAPID_API_KEY,
@@ -159,7 +159,7 @@ const MovieDet = () => {
         setCast(creditsResponse.data.cast);
         setCrew(creditsResponse.data.crew);
 
-        // Fetch movie reviews
+        
         const reviewsResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/reviews`, {
           params: {
             api_key: import.meta.env.VITE_APP_RAPID_API_KEY,
@@ -168,7 +168,7 @@ const MovieDet = () => {
         });
         setReviews(reviewsResponse.data.results.slice(0, 3)); // Limit to 3 reviews
 
-        // Fetch movie recommendations
+       
         const recommendationsResponse = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/recommendations`, {
           params: {
             api_key: import.meta.env.VITE_APP_RAPID_API_KEY,
@@ -195,7 +195,7 @@ const MovieDet = () => {
     <Container backdrop={movie.backdrop_path}>
       <Overlay />
       <ContentBox>
-        {/* Movie Poster and Info */}
+    
         <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '20px', flexDirection: { xs: 'column', sm: 'row' } }}>
           <Poster 
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
@@ -225,7 +225,7 @@ const MovieDet = () => {
           </Box>
         </Box>
         
-        {/* Video Section */}
+       
         {video ? (
           <VideoBox>
             <TrailerText variant="h6" gutterBottom>Watch the Trailer:</TrailerText>
@@ -235,7 +235,7 @@ const MovieDet = () => {
           <Typography variant="body1" paragraph sx={{ color: '#b0b0b0' }}>No video available</Typography>
         )}
 
-        {/* Additional Movie Details */}
+       
         <ExtraDetailsBox>
           <Typography variant="h6" gutterBottom>Additional Details</Typography>
           <Divider sx={{ mb: 2, bgcolor: '#444' }} />
@@ -259,7 +259,7 @@ const MovieDet = () => {
           </Typography>
         </ExtraDetailsBox>
 
-        {/* Cast Section */}
+      
         <CastBox>
           <Typography variant="h6" gutterBottom>Cast</Typography>
           <Divider sx={{ mb: 2, bgcolor: '#444' }} />
@@ -280,7 +280,7 @@ const MovieDet = () => {
           </Grid>
         </CastBox>
 
-        {/* Crew Section */}
+       
         <CrewBox>
           <Typography variant="h6" gutterBottom>Crew</Typography>
           <Divider sx={{ mb: 2, bgcolor: '#444' }} />
@@ -301,7 +301,7 @@ const MovieDet = () => {
           </Grid>
         </CrewBox>
 
-        {/* Reviews Section */}
+       
         <ReviewsBox>
           <Typography variant="h6" gutterBottom>User Reviews</Typography>
           <Divider sx={{ mb: 2, bgcolor: '#444' }} />
@@ -318,7 +318,7 @@ const MovieDet = () => {
           )}
         </ReviewsBox>
 
-        {/* Recommended Movies Section */}
+       
         <RecommendationsBox>
           <Typography variant="h6" gutterBottom>Recommended Movies</Typography>
           <Divider sx={{ mb: 2, bgcolor: '#444' }} />

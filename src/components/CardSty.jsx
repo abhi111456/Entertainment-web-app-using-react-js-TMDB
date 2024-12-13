@@ -11,7 +11,7 @@ import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import AspectRatio from '@mui/joy/AspectRatio';
 import PlayArrow from '@mui/icons-material/PlayArrow';
-import YouTubeIcon from '@mui/icons-material/YouTube';// Import YouTube icon
+import YouTubeIcon from '@mui/icons-material/YouTube';
 
 export default function CardSty(props) {
     const [movieList, setMovieList] = React.useState([]);
